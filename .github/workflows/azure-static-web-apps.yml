@@ -24,4 +24,4 @@ jobs:
           action: "upload"
           app_location: "/"
           output_location: ""
-          app_build_command: ""  # 👈 disables build step completely
+          app_build_command: ""  # disables frontend build entirely
