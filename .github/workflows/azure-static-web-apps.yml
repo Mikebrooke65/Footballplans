@@ -24,4 +24,4 @@ jobs:
           action: "upload"
           app_location: "/"
           output_location: ""
-          skip_app_build: true
+          app_build_command: ""  # 👈 disables build step completely
