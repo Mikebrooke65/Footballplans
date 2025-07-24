@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson Plan Builder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>⚽ Create a New Lesson Plan</h1>
+  <form id="lessonForm">
+    <label>Lesson Title</label>
+    <input type="text" name="lessonTitle" required />
+
+    <label>High-Level Description</label>
+    <textarea name="lessonDescription" required></textarea>
+
+    <!-- SESSION 1 -->
+    <h2>Session 1</h2>
+    <input type="text" name="session1Title" placeholder="Session Title" required />
+    <textarea name="session1Brief" placeholder="Brief Description" required></textarea>
+    <textarea name="session1Points" placeholder="Key Points (comma-separated)" required></textarea>
+    <textarea name="session1Full" placeholder="Full Explanation" required></textarea>
+    <input type="text" name="session1Image" placeholder="Image Filename (e.g., session1.png)" required />
+    <textarea name="session1Resources" placeholder="Resources Needed" required></textarea>
+
+    <!-- SESSION 2 -->
+    <h2>Session 2</h2>
+    <input type="text" name="session2Title" required />
+    <textarea name="session2Brief" required></textarea>
+    <textarea name="session2Points" required></textarea>
+    <textarea name="session2Full" required></textarea>
+    <input type="text" name="session2Image" required />
+    <textarea name="session2Resources" required></textarea>
+
+    <!-- SESSION 3 -->
+    <h2>Session 3</h2>
+    <input type="text" name="session3Title" required />
+    <textarea name="session3Brief" required></textarea>
+    <textarea name="session3Points" required></textarea>
+    <textarea name="session3Full" required />
+    <input type="text" name="session3Image" required />
+    <textarea name="session3Resources" required></textarea>
+
+    <button type="submit">Generate Lesson Plan</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
