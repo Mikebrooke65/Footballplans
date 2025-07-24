@@ -20,6 +20,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      - name: Generate lesson indexes per skill
+        run: node generate-lesson-indexes.js
+
+      - name: Commit and push lesson indexes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add lessons/**/index.json
+          git commit -m "Auto-generate lesson index per skill"
+          git push
+        continue-on-error: true
 
       - name: Generate skill index.json
         run: node generate-index.js
