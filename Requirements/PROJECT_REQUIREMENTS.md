@@ -80,7 +80,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - The app will be updated over time, with new features added in future versions.
 - Existing lesson plan creation workflow is retained and integrated.
 
-##Reporting & Admin (Senior Coaches)
+## Reporting & Admin (Senior Coaches)
 -	Reporting:
   -	Senior coaches access reporting tools via the Azure Static Web App.
   -	Can generate reports showing:
@@ -97,7 +97,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   -	Only senior coaches have access to these web-based reporting and admin tools.
   -	These features are optimized for desktop use.
 
-##Privacy & Audit
+## Privacy & Audit
 -	Coach Privacy:
 -	Coaches can only see:
 -	Lessons they personally delivered
@@ -112,14 +112,14 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 -	Data Model:
   -	DeliveryRecords table contains: createdBy, createdAt,
 
-##Offline Access
+## Offline Access
 -	Lesson content (HTML/text) is cached locally and accessible offline in the mobile app.
 -	Lesson images are loaded from online sources and require internet connectivity.
 -	If offline, images are shown as placeholders or with an “unavailable” message.
 -	On login or lesson browsing, the app updates local cache with the latest lesson content.
 -	Coaches can deliver any lesson without internet, but images will only display when online.
 
-##Authentication & User Management
+## Authentication & User Management
 -	Account Provisioning:
 -	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
 -	Required fields: first name, last name, cellphone, email address, password.
@@ -127,22 +127,23 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 -	Login Flow:
 -	Users log in with email and password.
 -	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
-⦁	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
-⦁	Roles:
-⦁	Each user is assigned a role (coach, manager, senior coach) at account creation.
-⦁	Roles control access to features and data.
-⦁	Password Reset:
-⦁	Senior coaches can reset user passwords via the admin site.
-⦁	(Optional) Self-service password reset may be added later.
-Authentication & User Management
+-	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
+-	Roles:
+-	Each user is assigned a role (coach, manager, senior coach) at account creation.
+-	Roles control access to features and data.
+-	Password Reset:
+-	Senior coaches can reset user passwords via the admin site.
+-	(Optional) Self-service password reset may be added later.
+
+## Authentication & User Management
 -	Account Provisioning:
 -	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
-⦁	Required fields: first name, last name, cellphone, email address, password.
-⦁	Only senior coaches have access to the user management interface.
-⦁	Login Flow:
-⦁	Users log in with email and password.
-⦁	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
-⦁	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
+-	Required fields: first name, last name, cellphone, email address, password.
+-	Only senior coaches have access to the user management interface.
+-	Login Flow:
+-	Users log in with email and password.
+-	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
+-	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
 -	Roles:
 -	Each user is assigned a role (coach, manager, senior coach) at account creation.
 -	Roles control access to features and data.
@@ -152,13 +153,13 @@ Authentication & User Management
 -	Two-Factor Authentication (2FA):
 -	Two-factor authentication is not required for this application.
 
-##Coach-Team Association
+## Coach-Team Association
 -	Coaches are not limited to a single team within the app.
 -	For each lesson delivery, the coach selects the team they are coaching for that session.
 -	Coaches can deliver lessons to multiple teams; each delivery record links coach, team, lesson, and date.
 -	The app does not store a permanent mapping between coaches and teams—team selection is flexible and session-based
 
-##Lesson Delivery History & Versioning
+## Lesson Delivery History & Versioning
 -	History Table/List:
 -	Displays the following columns:
 -	Skill (category)
@@ -174,50 +175,50 @@ Authentication & User Management
 -	Delivery records store the version number of the lesson as delivered, preserving historical context.
 -	Notes:
 -	Coaches can add notes after delivering a lesson.
-⦁	Notes are stored in the delivery record, tied to the delivery date.
-⦁	Data Model:
-⦁	DeliveryRecords table includes: Skill, LessonName, CoachID, CoachName, TeamID, TeamName, DateDelivered, LessonVersion, Notes.
+-	Notes are stored in the delivery record, tied to the delivery date.
+-	Data Model:
+-	DeliveryRecords table includes: Skill, LessonName, CoachID, CoachName, TeamID, TeamName, DateDelivered, LessonVersion, Notes.
 
-##Lesson Versioning
+## Lesson Versioning
 -	Version Management:
-⦁	Lesson version number is managed via the lesson builder (static web app).
-⦁	Senior coaches can:
-⦁	Create a new lesson (sets version to 1)
-⦁	Edit an existing lesson (opens lesson for editing)
-⦁	If any changes are made and saved, the version number increments by 1.
-⦁	Version increment can be triggered automatically on save, or manually by the senior coach.
-⦁	The lesson builder UI clearly displays the current version number and prompts on save if version will be incremented.
-⦁	Delivery Record:
-⦁	Each lesson delivery record stores the lesson version number as it was at the time of delivery.
-⦁	Change History (Optional):
-⦁	Senior coaches can view a history of changes/versions for each lesson in the lesson builder.
+-	Lesson version number is managed via the lesson builder (static web app).
+-	Senior coaches can:
+-	Create a new lesson (sets version to 1)
+-	Edit an existing lesson (opens lesson for editing)
+-	If any changes are made and saved, the version number increments by 1.
+-	Version increment can be triggered automatically on save, or manually by the senior coach.
+-	The lesson builder UI clearly displays the current version number and prompts on save if version will be incremented.
+-	Delivery Record:
+-	Each lesson delivery record stores the lesson version number as it was at the time of delivery.
+-	Change History (Optional):
+	Senior coaches can view a history of changes/versions for each lesson in the lesson builder.
 
-##Lesson Builder Access & Approval
-⦁	Only senior coaches have access to the lesson builder via the static web app.
-⦁	No additional approval process is needed for new or updated lessons.
-⦁	Lessons created or edited by senior coaches become immediately available in the mobile app (after sync/update).
-
-
-##Lesson Versioning & Changelog
-⦁	Version Management:
-⦁	Lesson version number increments when a senior coach edits a lesson and saves changes.
-⦁	Upon version change, the lesson builder prompts for a changelog note describing the update.
-⦁	The changelog note and timestamp are stored with the lesson record.
-⦁	Previous lesson content is not retained—edits overwrite the existing lesson.
-⦁	Delivery Record:
-⦁	Each delivery record stores the lesson version number as delivered.
-⦁	Change History:
-⦁	Senior coaches can view a list of version numbers and changelog notes for each lesson.
+## Lesson Builder Access & Approval
+-	Only senior coaches have access to the lesson builder via the static web app.
+-	No additional approval process is needed for new or updated lessons.
+-	Lessons created or edited by senior coaches become immediately available in the mobile app (after sync/update).
 
 
+## Lesson Versioning & Changelog
+-	Version Management:
+-	Lesson version number increments when a senior coach edits a lesson and saves changes.
+-	Upon version change, the lesson builder prompts for a changelog note describing the update.
+-	The changelog note and timestamp are stored with the lesson record.
+-	Previous lesson content is not retained—edits overwrite the existing lesson.
+-	Delivery Record:
+-	Each delivery record stores the lesson version number as delivered.
+-	Change History:
+-	Senior coaches can view a list of version numbers and changelog notes for each lesson.
 
 
-Messaging (Future Version)
-⦁	In a future release, senior coaches can send messages to coaches via the app.
-⦁	Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
-⦁	Messages may include announcements, updates, or reminders.
-⦁	Senior coaches can target all coaches, selected teams, or individual coaches.
-⦁	Coaches receive notifications and have access to a message history in the app.
+
+
+## Messaging (Future Version)
+-	In a future release, senior coaches can send messages to coaches via the app.
+-	Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
+-	Messages may include announcements, updates, or reminders.
+-	Senior coaches can target all coaches, selected teams, or individual coaches.
+-	Coaches receive notifications and have access to a message history in the app.
 
 
 
@@ -235,7 +236,7 @@ Messaging (Future Version)
 - **Change History:**
   - Senior coaches can view a list of version numbers and changelog notes for each lesson.
 
----
+
 
 ### Lesson Builder Access & Approval
 
@@ -243,11 +244,11 @@ Messaging (Future Version)
 - No additional approval process is needed for new or updated lessons.
 - Lessons created or edited by senior coaches become immediately available in the mobile app (after sync/update).
 
----
+
 
 ### Messaging Foundation (Preparation for Future Release)
 
-- **Initial Build Preparation:**
+- ** Initial Build Preparation:**
   - Add a `Messages` table to the database with fields for:
     - `MessageID`: unique identifier for each message.
     - `SenderID`: reference to the senior coach who sends the message.
