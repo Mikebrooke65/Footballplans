@@ -81,52 +81,52 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - Existing lesson plan creation workflow is retained and integrated.
 
 ##Reporting & Admin (Senior Coaches)
-⦁	Reporting:
-⦁	Senior coaches access reporting tools via the Azure Static Web App.
-⦁	Can generate reports showing:
-⦁	What lessons have been delivered
-⦁	Which teams received them
-⦁	Who delivered them (coach)
-⦁	Filter by date range, team, or coach
-⦁	Reports viewable in browser, with option to export (CSV/PDF).
-⦁	Data pulled from Azure Table Storage.
-⦁	Admin Maintenance:
-⦁	Senior coaches can update (add/edit/remove) teams and coaches via the web app.
-⦁	Changes are synced to Azure Table Storage and reflected in the mobile app for all users.
-⦁	Access:
-⦁	Only senior coaches have access to these web-based reporting and admin tools.
-⦁	These features are optimized for desktop use.
+-	Reporting:
+  -	Senior coaches access reporting tools via the Azure Static Web App.
+  -	Can generate reports showing:
+    -	What lessons have been delivered
+    -Which teams received them
+    -	Who delivered them (coach)
+  -Filter by date range, team, or coach
+  -	Reports viewable in browser, with option to export (CSV/PDF).
+  -	Data pulled from Azure Table Storage.
+-	Admin Maintenance:
+  -	Senior coaches can update (add/edit/remove) teams and coaches via the web app.
+  -	Changes are synced to Azure Table Storage and reflected in the mobile app for all users.
+-	Access:
+  -	Only senior coaches have access to these web-based reporting and admin tools.
+  -	These features are optimized for desktop use.
 
 ##Privacy & Audit
-⦁	Coach Privacy:
-⦁	Coaches can only see:
-⦁	Lessons they personally delivered
-⦁	Lessons delivered to their selected team (not revealing which coach delivered unless it was them)
-⦁	Coaches cannot access or view other coaches’ delivery details.
-⦁	Senior Coach Audit Trail:
-⦁	Senior coaches, via the static web app, can view:
-⦁	All lesson delivery records, across all coaches and teams
-⦁	An audit log showing when records were added, edited, or deleted, and by which user
-⦁	Audit data includes:
-⦁	Record ID, action type (add/edit/delete), user, timestamp, before/after values
-⦁	Data Model:
-⦁	DeliveryRecords table contains: createdBy, createdAt,
+-	Coach Privacy:
+-	Coaches can only see:
+-	Lessons they personally delivered
+-	Lessons delivered to their selected team (not revealing which coach delivered unless it was them)
+-	Coaches cannot access or view other coaches’ delivery details.
+-	Senior Coach Audit Trail:
+-	Senior coaches, via the static web app, can view:
+  -	All lesson delivery records, across all coaches and teams
+  -	An audit log showing when records were added, edited, or deleted, and by which user
+-	Audit data includes:
+  -	Record ID, action type (add/edit/delete), user, timestamp, before/after values
+-	Data Model:
+  -	DeliveryRecords table contains: createdBy, createdAt,
 
 ##Offline Access
-⦁	Lesson content (HTML/text) is cached locally and accessible offline in the mobile app.
-⦁	Lesson images are loaded from online sources and require internet connectivity.
-⦁	If offline, images are shown as placeholders or with an “unavailable” message.
-⦁	On login or lesson browsing, the app updates local cache with the latest lesson content.
-⦁	Coaches can deliver any lesson without internet, but images will only display when online.
+-	Lesson content (HTML/text) is cached locally and accessible offline in the mobile app.
+-	Lesson images are loaded from online sources and require internet connectivity.
+-	If offline, images are shown as placeholders or with an “unavailable” message.
+-	On login or lesson browsing, the app updates local cache with the latest lesson content.
+-	Coaches can deliver any lesson without internet, but images will only display when online.
 
 ##Authentication & User Management
-⦁	Account Provisioning:
-⦁	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
-⦁	Required fields: first name, last name, cellphone, email address, password.
-⦁	Only senior coaches have access to the user management interface.
-⦁	Login Flow:
-⦁	Users log in with email and password.
-⦁	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
+-	Account Provisioning:
+-	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
+-	Required fields: first name, last name, cellphone, email address, password.
+-	Only senior coaches have access to the user management interface.
+-	Login Flow:
+-	Users log in with email and password.
+-	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
 ⦁	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
 ⦁	Roles:
 ⦁	Each user is assigned a role (coach, manager, senior coach) at account creation.
@@ -135,51 +135,51 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 ⦁	Senior coaches can reset user passwords via the admin site.
 ⦁	(Optional) Self-service password reset may be added later.
 Authentication & User Management
-⦁	Account Provisioning:
-⦁	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
+-	Account Provisioning:
+-	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
 ⦁	Required fields: first name, last name, cellphone, email address, password.
 ⦁	Only senior coaches have access to the user management interface.
 ⦁	Login Flow:
 ⦁	Users log in with email and password.
 ⦁	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
 ⦁	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
-⦁	Roles:
-⦁	Each user is assigned a role (coach, manager, senior coach) at account creation.
-⦁	Roles control access to features and data.
-⦁	Password Reset:
-⦁	Senior coaches can reset user passwords via the admin site.
-⦁	(Optional) Self-service password reset may be added later.
-⦁	Two-Factor Authentication (2FA):
-⦁	Two-factor authentication is not required for this application.
+-	Roles:
+-	Each user is assigned a role (coach, manager, senior coach) at account creation.
+-	Roles control access to features and data.
+-	Password Reset:
+-	Senior coaches can reset user passwords via the admin site.
+-	(Optional) Self-service password reset may be added later.
+-	Two-Factor Authentication (2FA):
+-	Two-factor authentication is not required for this application.
 
 ##Coach-Team Association
-⦁	Coaches are not limited to a single team within the app.
-⦁	For each lesson delivery, the coach selects the team they are coaching for that session.
-⦁	Coaches can deliver lessons to multiple teams; each delivery record links coach, team, lesson, and date.
-⦁	The app does not store a permanent mapping between coaches and teams—team selection is flexible and session-based
+-	Coaches are not limited to a single team within the app.
+-	For each lesson delivery, the coach selects the team they are coaching for that session.
+-	Coaches can deliver lessons to multiple teams; each delivery record links coach, team, lesson, and date.
+-	The app does not store a permanent mapping between coaches and teams—team selection is flexible and session-based
 
 ##Lesson Delivery History & Versioning
-⦁	History Table/List:
-⦁	Displays the following columns:
-⦁	Skill (category)
-⦁	Lesson Name
-⦁	Coach Name
-⦁	Team Name
-⦁	Date Delivered
-⦁	Lesson Version Number
-⦁	Notes (entered by coach after delivery, timestamped with delivery date)
-⦁	Lesson Versioning:
-⦁	Each lesson includes a version number.
-⦁	Lessons updated in the repo have their version incremented.
-⦁	Delivery records store the version number of the lesson as delivered, preserving historical context.
-⦁	Notes:
-⦁	Coaches can add notes after delivering a lesson.
+-	History Table/List:
+-	Displays the following columns:
+-	Skill (category)
+-	Lesson Name
+-	Coach Name
+-	Team Name
+-	Date Delivered
+-	Lesson Version Number
+-	Notes (entered by coach after delivery, timestamped with delivery date)
+-	Lesson Versioning:
+-	Each lesson includes a version number.
+-	Lessons updated in the repo have their version incremented.
+-	Delivery records store the version number of the lesson as delivered, preserving historical context.
+-	Notes:
+-	Coaches can add notes after delivering a lesson.
 ⦁	Notes are stored in the delivery record, tied to the delivery date.
 ⦁	Data Model:
 ⦁	DeliveryRecords table includes: Skill, LessonName, CoachID, CoachName, TeamID, TeamName, DateDelivered, LessonVersion, Notes.
 
 ##Lesson Versioning
-⦁	Version Management:
+-	Version Management:
 ⦁	Lesson version number is managed via the lesson builder (static web app).
 ⦁	Senior coaches can:
 ⦁	Create a new lesson (sets version to 1)
@@ -220,7 +220,6 @@ Messaging (Future Version)
 ⦁	Coaches receive notifications and have access to a message history in the app.
 
 
-## Project Requirements
 
 ### Lesson Versioning & Changelog
 
