@@ -158,7 +158,7 @@ CREATE TABLE Messages (
     FOREIGN KEY (SenderID) REFERENCES Users(UserID),
     FOREIGN KEY (RecipientID) REFERENCES Users(UserID),
     FOREIGN KEY (TeamID) REFERENCES Teams(TeamID)
-);
+			)
 
 
 ## Privacy & Audit
