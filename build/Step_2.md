@@ -1,70 +1,62 @@
-# STEP_2.md — Contributor Roles & Users Table Setup
+# ⚙️ STEP_2.md – Define Contributor Roles and `Users` Table (Azure Storage)
 
-This step defines system contributor roles, sets up Azure Table Storage entities, and finalizes the full field structure for `Users`, as specified in the Requirements document.
+## Purpose
 
----
-
-## 🔐 1. Contributor Roles
-
-Establish system roles and access capabilities:
-
-| Role         | Capabilities                                                                 |
-|--------------|-------------------------------------------------------------------------------|
-| Coach        | View and deliver sessions for assigned team                                  |
-| SeniorCoach  | Assign teams, edit lessons, oversee contributor activity across multiple teams|
-| Admin        | Full system access: data, audits, contributor management                     |
+This step creates the foundational `Users` table in Azure Table Storage to support secure login, role-aware feature access, and dynamic team switching within the coaching app. This document reflects the requirements specified in `PROJECT_REQUIREMENTS.md` as of July 2025.
 
 ---
 
-## 📋 2. Azure Table Creation
+## 📁 Azure Table: `Users`
 
-In Azure Storage (Storage Browser → Tables → + Add Table), create:
+Stores user authentication data, contributor roles, and team relationships.
 
-- `Users`
-- `Teams`
-- `Lessons`
-- `CoachTextBlocks`
-- `AuditLog`
+### 📋 Table Schema
 
-> Each table must use `PartitionKey` and `RowKey`. For `Users`, both can be set to the user ID.
-
----
-
-## 🧩 3. Users Table: Required Fields
-
-Set up entities with the following fields:
-
-| Field               | Required | Example                        | Notes                                                   |
-|---------------------|----------|--------------------------------|---------------------------------------------------------|
-| `PartitionKey`      | ✅        | `"users"`                      | Logical group for all user entities                     |
-| `RowKey`            | ✅        | `"coach01"`                    | Unique user ID                                          |
-| `Role`              | ✅        | `"Coach"` / `"SeniorCoach"` / `"Admin"` | Governs access levels                         |
-| `Name`              | ✅        | `"Sam Garcia"`                 | Display name for UI and logging                         |
-| `Email`             | ✅        | `"sam.garcia@demo.org"`        | Identity, audit, invites                                |
-| `DefaultTeamID`     | ⚠️        | `"team03"` / `null` / omitted  | Required for Coach; `null` for SeniorCoach; omit for Admin |
-| `AccessibleTeamIDs` | ✅        | `["team01", "team02"]`         | Defines which teams can be accessed                     |
-| `Status`            | ⚠️        | `"Active"` / `"Invited"`       | Optional: contributor lifecycle state                   |
-| `CreatedOn`         | ⚠️        | `"2025-07-29T08:00:00Z"`       | Optional: audit and contributor tracking                |
-
-> If `DefaultTeamID` is missing or `null`, the system will show a team picker on login and bypass any auto-selection logic.
+| Field Name           | Type               | Required | Notes                                                                 |
+|----------------------|--------------------|----------|-----------------------------------------------------------------------|
+| `UserID`             | `string`           | ✅        | Acts as `PartitionKey`. Unique user identifier.                      |
+| `Role`               | `string`           | ✅        | One of: `Coach`, `Manager`, `SeniorCoach`. Controls feature access.  |
+| `FirstName`          | `string`           | ✅        | Display name in app and reports.                                     |
+| `LastName`           | `string`           | ✅        | Display name in app and reports.                                     |
+| `Email`              | `string`           | ✅        | Login credential and messaging anchor.                               |
+| `PasswordHash`       | `string`           | ✅        | Secure hash for login validation.                                    |
+| `Cellphone`          | `string`           | ❌        | Optional. For admin contact or future messaging.                     |
+| `DefaultTeamID`      | `string`           | ❌        | Optional. Used to pre-populate team picker on SkillSelectPage.       |
+| `AccessibleTeamIDs`  | `string[]` or CSV  | ✅        | List of viewable/supportable teams. Enables cross-team operations.   |
 
 ---
 
-## 🔧 4. Example Entities
+## 🧠 Field Behaviors & UI Integration
 
-Use these as direct inserts in Azure Table Storage.
+- `DefaultTeamID`:  
+  - Not enforced; only used for UI pre-selection on SkillSelectPage.  
+  - Reflects user's usual coaching assignment.  
+  - Can be null.
 
-### 👨‍🏫 Coach
+- `AccessibleTeamIDs`:  
+  - Drives dynamic team switching and delivery permissions.  
+  - Includes one or more team IDs or may be empty (for unassigned coaches).  
+  - Enables support roles across multiple squads.
+
+- `Role`:  
+  - Enables feature gating:  
+    - `Coach` — can view/select lessons, record deliveries, view history.  
+    - `Manager` — same as Coach but may include team coordination (future).  
+    - `SeniorCoach` — full access to lesson builder, reports, admin site, and markdown content delivery.
+
+---
+
+## 🧪 Sample JSON Record
 
 ```json
 {
-  "PartitionKey": "users",
-  "RowKey": "coach01",
+  "PartitionKey": "usr_0001",
   "Role": "Coach",
-  "Name": "Sam Garcia",
-  "Email": "sam.garcia@demo.org",
-  "DefaultTeamID": "team03",
-  "AccessibleTeamIDs": ["team03"],
-  "Status": "Active",
-  "CreatedOn": "2025-07-29T08:00:00Z"
+  "FirstName": "Jordan",
+  "LastName": "Lee",
+  "Email": "jordan.lee@example.com",
+  "PasswordHash": "a1b2c3hashedvaluehere",
+  "Cellphone": "+64-21-555-1234",
+  "DefaultTeamID": "team_U11A",
+  "AccessibleTeamIDs": ["team_U11A", "team_U10B"]
 }
