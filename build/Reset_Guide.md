@@ -1,64 +1,52 @@
-# STEP_1_SETUP.md
+# VS22 Legacy Project Purge Instructions
 
-Initial project setup and folder scaffolding instructions for the West Coast Rangers Junior Coaching App (built in .NET MAUI using Visual Studio 2022). This step establishes structure, planning docs, sample data, and key stub files.
-
----
-
-## 🧭 Purpose
-
-Align repo structure with build plan and design principles, ensuring clarity for contributors and seamless implementation of coaching tools, Markdown previews, session flow, and audit tracking.
+Clean out all remnants of previous MAUI prototypes (`FootballPolansd`, `FootballPlansApp`, etc.) from your system and Visual Studio 2022 environment to prevent confusion and conflicts.
 
 ---
 
-## ✅ 1. Create .NET MAUI Solution
+## 💾 1. Delete Old Project Folders
 
-- Open Visual Studio 2022
-- Choose: `Create a new project > .NET MAUI App`
-- Name it: `FootballCoachApp`
-- Ensure shared project folder is created as root working directory
+Navigate to your usual dev directories, such as:
 
----
+- `Documents\Visual Studio 2022\Projects`
+- `source\repos`
+- Any custom location used previously
 
-## 📁 2. Add Project Folders
+Delete:
 
-Inside the shared MAUI project, use Solution Explorer:
-
-- Right-click → `Add > New Folder` and create:
-  - `/Views/`
-  - `/Views/Admin/`
-  - `/ViewModels/`
-  - `/Controls/`
-  - `/Models/`
-  - `/Services/`
-  - `/sample_data/`
-  - `/build/`
-  - (Optional) `/docs/` for contributor formatting guides
+- `FootballPolansd`
+- `FootballPlansApp`
+- Any nested `.vs`, `bin`, `obj`, or `.user` files
 
 ---
 
-## 📝 3. Create Planning Files
+## 🗑 2. Remove from Recent Projects
 
-In `/build/`:
+Inside Visual Studio 2022:
 
-- Add:
-  - `BUILD_PLAN.md` → implementation phases
-  - `PrepChecklist.md` → setup steps
-  - `STEP_1_SETUP.md` → this file
-- Inside `/DesignPrinciples/` add:
-  - `Markdown.md` → contributor formatting expectations
+- On the Start Window, locate legacy entries (`FootballPolansd`, etc.)
+- Hover and click **X** to remove from **Recent Projects and Solutions**
 
 ---
 
-## 🧪 4. Stub Views and ViewModels
+## 🔍 3. Optional: Clear VS Cache and Temp
 
-In `/Views/`, create:
+Navigate to:
 
-```plaintext
-LessonBuilder.xaml
-LessonBuilder.xaml.cs
-TextBlockEditor.xaml
-TextBlockEditor.xaml.cs
-SkillSelectPage.xaml
-SessionStart.xaml
-SessionStart.xaml.cs
-HomePage.xaml
+- `%LocalAppData%\Microsoft\VisualStudio\`
+- Optionally delete `_ComponentModelCache` and similar folders holding stale references
+
+Restart Visual Studio to apply changes.
+
+---
+
+## 🧼 4. Optional: Clean Up Git Remotes
+
+If linked to local Git repos:
+
+- Remove associated folders from your dev repo directory
+- Delete entries in GitHub Desktop or terminal repo list (e.g., `git remote remove`)
+
+---
+
+*Your workspace is now clean. Proceed with Reset_Guide.md and STEP_1_SETUP.md with full confidence.*
