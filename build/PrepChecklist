@@ -1,82 +1,85 @@
 # PREP_CHECKLIST.md
 
-Checklist of preparation steps prior to UI and app development for the West Coast Rangers Junior Coaching Platform.
+Pre-build preparation checklist for the West Coast Rangers Junior Coaching App (MAUI version). Complements `BUILD_PLAN.md` and ensures repo, tooling, and sample content are aligned before implementation begins.
 
 ---
 
 ## ✅ 1. Repo Structure & Scaffolding
 
-- [ ] Folder layout matches build phases:
-  - `/vs22/Pages/`, `/vs22/Admin/`, `/build/`, `/sample_data/`
-- [ ] `BUILD_PLAN.md` and `DesignPrinciples.md` located under `/build/`
-- [ ] Stub components created for key UI targets:
-  - `LessonBuilder`
-  - `TextBlockEditor`
-  - `SkillSelectPage`
-  - `SessionStart`
-  - `AuditTrailViewer`
-- [ ] Solution/project file created in VS2022 with named folders
+- [ ] Folder layout matches MAUI build phases:
+  - `/Views/` for screens (e.g. LessonBuilder, SessionStart)
+  - `/ViewModels/` if using MVVM pattern
+  - `/Controls/` for reusable UI (e.g. MarkdownRenderer)
+  - `/Admin/` or `/Views/Admin/` for audit pages
+  - `/build/` for planning docs
+  - `/sample_data/` for mock records
+- [ ] `BUILD_PLAN.md` and `DesignPrinciples.md` in `/build/`
+- [ ] Stub views created as `.xaml` and `.xaml.cs`:
+  - `LessonBuilder.xaml`
+  - `TextBlockEditor.xaml`
+  - `SkillSelectPage.xaml`
+  - `SessionStart.xaml`
+  - `AuditTrailViewer.xaml`
+- [ ] VS2022 solution updated with scoped projects or folders per target
 
 ---
 
 ## ✅ 2. Sample Records
 
-- [ ] Add sample `CoachTextBlocks` using Markdown:
-  - Bold text
-  - Bullet lists
-  - Line breaks
-- [ ] Add sample `Lessons` with structured content
-- [ ] Store all records in `/sample_data/`
+- [ ] Add sample `CoachTextBlocks` (Markdown examples: bold, bullets, breaks)
+- [ ] Add sample `Lessons` with realistic content
+- [ ] Store samples in `/sample_data/`
+- [ ] Use sample records in docs and test harnesses
 
 ---
 
-## ✅ 3. Permissions & Auth Framework
+## ✅ 3. Permissions & Identity Model
 
-- [ ] Choose identity strategy (e.g. Azure AD, role flags)
-- [ ] Create mock users:
+- [ ] Confirm strategy (e.g. Azure AD, user roles via storage)
+- [ ] Create mock users for:
   - Senior Coach
   - Standard Coach
-- [ ] Define access rights per page:
+- [ ] Document page access levels:
   - Editable vs. read-only
-  - Markdown input vs. display-only
+  - TextBlockEditor for seniors only
+  - Markdown formatting panel access
 
 ---
 
-## ✅ 4. Test Harness Setup
+## ✅ 4. Test Harness & Validation
 
-- [ ] Build input validators for:
-  - Markdown text blocks
-  - Lesson content fields
-- [ ] Set up backend mocks for Azure Table reads
-- [ ] Markdown rendering tests (string input → UI preview output)
+- [ ] Build Markdown renderer test flow:
+  - Input string → UI render preview
+- [ ] Create simple validators for contributor inputs
+- [ ] Set up backend mocks for Azure Table reads:
+  - Static data loaders
+  - Edge case testers
 
 ---
 
 ## ✅ 5. Contributor Experience Map
 
-- [ ] Document full flow for a contributor:
-  - Logging in
-  - Editing a block
-  - Previewing Markdown
-  - Starting a session
-  - Auditing a delivery
-- [ ] Use this to refine contributor docs and interface hints
+- [ ] Sketch flow for Senior Coach:
+  - Login → Edit block → Preview → Start session → View audit
+- [ ] Verify onboarding guide covers this journey
+- [ ] Align onboarding hints in UI and docs
 
 ---
 
-## ✅ 6. Project Documentation
+## ✅ 6. Documentation Alignment
 
-- [ ] Update `README.md` to include:
-  - Phase summary
-  - Links to `BUILD_PLAN.md`, `DesignPrinciples.md`, `CONTRIBUTOR_GUIDE.md`
-- [ ] Create checklist in `CONTRIBUTOR_GUIDE.md` for Markdown formatting do’s/don’ts
-- [ ] Add visual formatting examples or screenshots (optional)
+- [ ] Update `README.md` with current phase and planning links
+- [ ] Add Markdown reference to `CONTRIBUTOR_GUIDE.md`:
+  - Allowed syntax
+  - Preview instructions
+  - Formatting checklist
+- [ ] Optional: add screenshots for formatting preview
 
 ---
 
-## 📌 Optional Enhancements (Prep Stage)
+## 🔄 Optional Prep Enhancements
 
-- [ ] Research/choose Markdown renderer with sanitization
-- [ ] Plan fallback or validator logic for unsupported tags
-- [ ] Decide on Markdown toggle option in editor UI
+- [ ] Evaluate Markdown sanitization library (e.g. Markdig + MAUI)
+- [ ] Decide on plain-text toggle fallback
+- [ ] Define unsupported Markdown tags and fallback behavior
 
