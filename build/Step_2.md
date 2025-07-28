@@ -304,3 +304,33 @@ This file defines all Azure Tables and Blob Storage folders required for the foo
   "Timestamp": "2025-07-29T10:45:00Z",
   "Tags": "role-change, access"
 }
+
+
+## ✅ Azure Function App Setup
+
+This section defines the Azure Function App required to support lesson indexing, media uploads, and future automation tasks tied to platform activity.
+
+**Function App Name:** `FootballCoachFunctions`  
+**Region:** `Australia East`  
+**Runtime Stack:** `.NET 8 (Isolated)`  
+**Storage Account:** `footballcoachstorage`  
+**Deployment Method:** Azure Portal or GitHub Actions CI/CD pipeline
+
+---
+
+### 🧩 Sample HTTP Trigger Function: IndexLessonContent
+
+This sample demonstrates a function that indexes lesson metadata based on the passed `lessonId`.
+
+```csharp
+[Function("IndexLessonContent")]
+public async Task<HttpResponseData> Run(
+    [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+{
+    var lessonId = req.Query["lessonId"];
+    // TODO: Validate input, fetch lesson record, push to indexing service
+    
+    var response = req.CreateResponse(HttpStatusCode.OK);
+    await response.WriteStringAsync($"Indexed lesson: {lessonId}");
+    return response;
+}
