@@ -43,8 +43,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - Editable and deletable by coaches
   - Queryable by coach or team for history
 
- -**Media:**
-  	- Media assets are stored in Azure Blob Storage under structured folders:
+ - **Media:** Media assets are stored in Azure Blob Storage under structured folders:
  	- Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
  	- Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
   	- MediaURLs field contains full blob URIs or relative paths for each asset
