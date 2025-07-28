@@ -61,3 +61,11 @@ A reference guide to key architectural and data integrity principles underpinnin
 - All tables designed for clarity and minimal complexity.
 - Relationships enforce logical filtering, not rigid joins.
 - Future extensibility preserved through optional fields and descriptive metadata.
+- Text blocks allow basic Markdown styling (bold, lists, line breaks) for readable prompts and coaching notes
+
+
+## 9. Human-Readable Text Formatting
+- CoachTextBlocks support Markdown for lightweight styling (bold, lists, spacing).
+- Enables personalized, legible prompts without HTML overhead.
+- Respects contributor intent while ensuring safe, predictable rendering.
+
