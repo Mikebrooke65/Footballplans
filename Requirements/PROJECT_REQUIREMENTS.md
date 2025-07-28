@@ -25,11 +25,12 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 
 ## Azure Data Storage
 - Azure Table Storage for structured data and Azure Blob Storage for media
-- **Users Table:** Stores user details, authentication info, and assigned roles.
-  - UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), TeamIDs (optional)
-  - Referenced by messaging (SenderID, RecipientID), delivery records (CoachID), and access control.
-  - Supports role-based querying and future expansion to staff/admin features.
-
+- **Users Table:** Stores user details, roles, and optional team associations.
+  - Fields: UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), DefaultTeamID (optional), AccessibleTeamIDs (array or comma-separated list)
+  - `DefaultTeamID` reflects a coach’s main assignment (may be null)
+  - `AccessibleTeamIDs` lists other teams the user is allowed to support or view
+  - Enables dynamic team selection in the app (e.g. assisting another squad)
+  - Supports cases where a coach has no assigned team but still participates
 - **Teams Table:** Stores team identity and scheduling details.
   - TeamID (PartitionKey), AgeGroup (e.g. U9), TeamName (e.g. Sapphires), TrainingGround (e.g. Huapai No5), TrainingTime (e.g. 4:30 pm)
   - Associated with multiple users (via Users.TeamIDs) and lesson delivery records (TeamID)
