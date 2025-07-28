@@ -25,13 +25,30 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 
 ## Azure Data Storage
 - Azure Table Storage for structured data and Azure Blob Storage for media
-- **Coaches Table:** Stores coach details, login info, associated team.
-- **Teams Table:** Stores team info, age group, etc.
-- **Lessons Table:** Stores lesson details, skill category, HTML URL, image URLs.
+- **Users Table:** Stores user details, authentication info, and assigned roles.
+  - UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), TeamIDs (optional)
+  - Referenced by messaging (SenderID, RecipientID), delivery records (CoachID), and access control.
+  - Supports role-based querying and future expansion to staff/admin features.
+
+- **Teams Table:** Stores team identity and scheduling details.
+  - TeamID (PartitionKey), AgeGroup (e.g. U9), TeamName (e.g. Sapphires), TrainingGround (e.g. Huapai No5), TrainingTime (e.g. 4:30 pm)
+  - Associated with multiple users (via Users.TeamIDs) and lesson delivery records (TeamID)
+  - Enables filtering and scheduling logic for personalized app experiences
+- **Lessons Table:** Stores structured lesson details and media references.
+  - LessonID (PartitionKey), SkillCategory (e.g. Passing), LessonName (e.g. 1 – Passing with Intent), LessonHTML (blob path to .html lesson plan), MediaURLs (references to images or videos used in lesson)
+  - Used to dynamically populate lesson selection and display in the app
+  - Supports versioning and media-rich lesson delivery across teams
 - **DeliveryRecords Table:** Stores lesson delivery records:
   - CoachID, TeamID, LessonID, LessonName, DateDelivered, Notes
   - Editable and deletable by coaches
   - Queryable by coach or team for history
+ 
+  - Media assets are stored in Azure Blob Storage under structured folders:
+  - Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
+  - Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
+  - MediaURLs field contains full blob URIs or relative paths for each asset
+  - Blob paths should match lesson versioning for caching and rollback support
+
 
 ## App Structure
 
