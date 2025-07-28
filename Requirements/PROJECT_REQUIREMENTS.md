@@ -217,6 +217,7 @@ CREATE TABLE Messages (
 
 ## Coach-Team Association
 -	Coaches are not limited to a single team within the app.
+-	They may be assigned to a usual team, which will be automatically poulated on tyhe SkillSelectPage
 -	For each lesson delivery, the coach selects the team they are coaching for that session.
 -	Coaches can deliver lessons to multiple teams; each delivery record links coach, team, lesson, and date.
 -	The app does not store a permanent mapping between coaches and teams—team selection is flexible and session-based
