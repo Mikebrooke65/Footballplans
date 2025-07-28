@@ -47,6 +47,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - **DeliveryRecords Table:** Stores lesson delivery records with snapshot fidelity and relational integrity.
   - Fields: DeliveryID (PartitionKey), CoachID, CoachName, TeamID, TeamName, LessonID, LessonVersionNumber, DateDelivered, Notes (optional), createdBy, createdAt
   - `CoachName` and `TeamName` are captured as text snapshots at the time of delivery (not dynamically fetched later)
+  -TeamID is chosen per delivery rather than permanently assigned.
   - Ensures historical accuracy even if names or team assignments are updated in other tables
   - `CoachID`, `TeamID`, and `LessonID` allow joins for filtering and permissions
   - `LessonVersionNumber` preserves the exact version delivered, even if content changes
@@ -142,6 +143,18 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - A Lesson Builder process, to enter new lessons
   - A users administration function
   - A reporting function
+
+### Senior Coach Site – Text Block Editor
+
+- Senior Coaches can add or edit display text shown in various parts of the app (e.g. SkillSelectPage, HomePage)
+- These blocks are stored in the `CoachTextBlocks` table and tagged by `PageName` and optional `TeamID`
+- The editor supports basic **Markdown formatting**, allowing contributors to style content as needed:
+  - `**bold text**` → **bold text**
+  - `*italic text*` → *italic text*
+  - `-` or `*` for bullet lists
+  - Line breaks using double return
+- A live preview displays how Markdown will render in the app
+- This enables readable prompts, coaching guidance, or team-specific notes with simple formatting — no HTML required
 
 ### Lesson Builder Access & Approval
 - No additional approval process is needed for new or updated lessons, a Senior Coach can create, edit or delete a lesson.
