@@ -42,12 +42,13 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - CoachID, TeamID, LessonID, LessonName, DateDelivered, Notes
   - Editable and deletable by coaches
   - Queryable by coach or team for history
- 
-  - Media assets are stored in Azure Blob Storage under structured folders:
-  - Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
-  - Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
-  - MediaURLs field contains full blob URIs or relative paths for each asset
-  - Blob paths should match lesson versioning for caching and rollback support
+
+ -**Media:**
+  	- Media assets are stored in Azure Blob Storage under structured folders:
+ 	- Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
+ 	- Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
+  	- MediaURLs field contains full blob URIs or relative paths for each asset
+  	- Blob paths should match lesson versioning for caching and rollback support
 
 
 ## App Structure
@@ -69,7 +70,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - From detail view, user can navigate back to SkillSelectPage.
 
 ### LessonSelectPage
-- Dynamically loads lessons under selected skill from Azure Table and cachjed in App
+- Dynamically loads lessons under selected skill from Azure Table and cached in App
 - Coaches select a lesson to view details.
 
 ### LessonPage
@@ -84,33 +85,29 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - Delivery history is queryable by all or by team
 
 ## Senior Coach Site Structure
-- Access:
- 	 -	Only senior coaches have access to these web-based reporting and admin tools.
- 	 -	These features are optimized for desktop use.
+	- Only senior coaches have access to these web-based reporting and admin tools.
+ 	- These features are optimized for desktop use.
+  - Site creates a Searchable list of all saved Lessons
+  - A Lesson Byuilder process, to enter new lessons
+  - A users administration function
+  - A reporting function
 
 ### Lesson Builder Access & Approval
-
-- Only senior coaches have access to the lesson builder via the static web app.
-- No additional approval process is needed for new or updated lessons.
+- No additional approval process is needed for new or updated lessons, a Senior Coach can create, edit or delete a lesson.
 - Lessons created or edited by senior coaches become immediately available in the mobile app (after sync/update).
+- Generates `.html` lesson plans organized by skill, stored in Azure table storage, with linked media in Blob storage
 
-
-### Lesson Plan Creation
-- Senior coaches access a web-based lesson builder via Azure Static Web App.
-- Generates `.html` lesson plans organized by skill, stored in the GitHub repo.
-
-## Reporting & Admin
-- Reporting:
-  	-	Senior coaches access reporting tools via the Azure Static Web App.
-  	-	Can generate reports showing:
-    		-	What lessons have been delivered
-    		-	Which teams received them
-   	 	-	Who delivered them (coach)
+### Reporting & Admin
+-	Can generate reports showing:
+	-	What lessons have been delivered
+   	-	Which teams received them
+   	-	Who delivered them (coach)
   	-	Filter by date range, team, or coach
 -	Reports viewable in browser, with option to export (CSV/PDF).
 -	Data pulled from Azure Table Storage.
--	Admin Maintenance:
-  	-	Senior coaches can update (add/edit/remove) teams and coaches via the web app.
+-	
+### Admin Maintenance:
+  	-	Senior Coaches can update (add/edit/remove) teams and coaches
   	-	Changes are synced to Azure Table Storage and reflected in the mobile app for all users.
 
 
@@ -128,14 +125,14 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 
 ### Version 2 (To Be Added once version 1 fully operational)
 
-## Messaging
+#### Messaging
 - In a future release, senior coaches can send messages to coaches via the app.
 - Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
 - Messages may include announcements, updates, or reminders.
 - Senior coaches can target all coaches, selected teams, or individual coaches.
 - Coaches receive notifications and have access to a message history in the app.
 
-### Messaging Foundation (Preparation for Future Release)
+#### Messaging Foundation (Preparation for Future Release)
 
 - ** Initial Build Preparation:**
   - Add a `Messages` table to the database with fields for:
