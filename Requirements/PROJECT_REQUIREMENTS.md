@@ -24,21 +24,26 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - **Authentication:** For prototype, login for up to 20 users.
 
 ## Azure Data Storage
+
 - Azure Table Storage for structured data and Azure Blob Storage for media
+
 - **Users Table:** Stores user details, roles, and optional team associations.
-  - Fields: UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), DefaultTeamID (optional, for UI pre-poulation only, not a hard assoignment), AccessibleTeamIDs (array or comma-separated list)
+  - Fields: UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), DefaultTeamID (optional, for UI pre-population only, not a hard assignment), AccessibleTeamIDs (array or comma-separated list)
   - `DefaultTeamID` reflects a coach’s main assignment (may be null)
   - `AccessibleTeamIDs` lists other teams the user is allowed to support or view
   - Enables dynamic team selection in the app (e.g. assisting another squad)
   - Supports cases where a coach has no assigned team but still participates
+
 - **Teams Table:** Stores team identity and scheduling details.
-  - TeamID (PartitionKey), AgeGroup (e.g. U9), TeamName (e.g. Sapphires), TrainingGround (e.g. Huapai No5), TrainingTime (e.g. 4:30 pm)
-  - Associated with multiple users (via Users.TeamIDs) and lesson delivery records (TeamID)
+  - Fields: TeamID (PartitionKey), AgeGroup (e.g. U9), TeamName (e.g. Sapphires), TrainingGround (e.g. Huapai No5), TrainingTime (e.g. 4:30 pm)
+  - Associated with multiple users (via Users.AccessibleTeamIDs) and lesson delivery records (TeamID)
   - Enables filtering and scheduling logic for personalized app experiences
+
 - **Lessons Table:** Stores structured lesson details and media references.
-  - LessonID (PartitionKey), SkillCategory (e.g. Passing), LessonName (e.g. 1 – Passing with Intent), LessonHTML (blob path to .html lesson plan), MediaURLs (references to images or videos used in lesson)
+  - Fields: LessonID (PartitionKey), SkillCategory (e.g. Passing), LessonName (e.g. 1 – Passing with Intent), LessonHTML (blob path to .html lesson plan), MediaURLs (references to images or videos used in lesson)
   - Used to dynamically populate lesson selection and display in the app
   - Supports versioning and media-rich lesson delivery across teams
+
 - **DeliveryRecords Table:** Stores lesson delivery records with snapshot fidelity and relational integrity.
   - Fields: DeliveryID (PartitionKey), CoachID, CoachName, TeamID, TeamName, LessonID, LessonVersionNumber, DateDelivered, Notes (optional), createdBy, createdAt
   - `CoachName` and `TeamName` are captured as text snapshots at the time of delivery (not dynamically fetched later)
@@ -48,30 +53,45 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - `Notes` are optional reflections from the coach, timestamped with delivery
   - Editable and deletable by the coach who recorded it
   - Queryable by coach, team, or senior coach with audit trail support
-- **GameFeedback Table
-Stores coach-submitted game reflections and analysis from the SkillSelectPage.
 
-- Fields:
-  - FeedbackID (PartitionKey): Unique identifier for each feedback entry
-  - CoachID: Links to submitting coach
-  - CoachName: Snapshot at time of entry (not dynamically fetched later)
-  - TeamID: Links to relevant team
-  - TeamName: Snapshot at time of entry
-  - Date: Game date (coach-selected, defaults to today's date)
-  - Notes: Free-text game analysis, guided by prompts (“What went well? What needs work?”)
-  - createdBy: Identity of record creator
-  - createdAt: Timestamp of creation
+- **GameFeedback Table:** Stores coach-submitted game reflections and analysis from the SkillSelectPage.
+  - Fields:
+    - FeedbackID (PartitionKey): Unique identifier for each feedback entry
+    - CoachID: Links to submitting coach
+    - CoachName: Snapshot at time of entry (not dynamically fetched later)
+    - TeamID: Links to relevant team
+    - TeamName: Snapshot at time of entry
+    - Date: Game date (coach-selected, defaults to today's date)
+    - Notes: Free-text game analysis, guided by prompts (“What went well? What needs work?”)
+    - createdBy: Identity of record creator
+    - createdAt: Timestamp of creation
+  - Editable and deletable only by the coach who submitted it
+  - Queryable by coach, team, or senior coach dashboard
+  - Future version may use text analysis to suggest lessons or detect performance trends
 
-- Editable and deletable only by the coach who submitted it
-- Queryable by coach, team, or senior coach dashboard
-- Future version may use text analysis to suggest lessons or detect performance trends
+- **CoachTextBlocks Table:** Stores configurable text blocks created by Senior Coaches for display in the app (e.g. SkillSelectPage prompts, welcome text).
+  - Fields:
+    - BlockID (PartitionKey): Unique identifier for each text block
+    - PageName: Where the block will appear (e.g. SkillSelectPage, HomePage)
+    - BlockLabel: Optional descriptive tag (e.g. “Skill Introduction Prompt”)
+    - TeamID: If team-specific, otherwise null for default content
+    - TextContent: Formatted text entered via Senior Coach Site (Markdown allowed)
+    - createdBy: Identity of contributing Senior Coach
+    - createdAt: Timestamp of creation
+    - lastEditedBy (optional)
+    - lastEditedAt (optional)
+
+  - Editable only via Senior Coach Web Site
+  - Queryable by PageName and TeamID
+  - Supports default and team-specific variants
 
 
- - **Media:** Media assets are stored in Azure Blob Storage under structured folders:
- 	- Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
- 	- Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
-  	- MediaURLs field contains full blob URIs or relative paths for each asset
-  	- Blob paths should match lesson versioning for caching and rollback support
+- **Media:** Media assets are stored in Azure Blob Storage under structured folders:
+  - Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
+  - Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
+  - MediaURLs field contains full blob URIs or relative paths for each asset
+  - Blob paths should match lesson versioning for caching and rollback support
+
 
 
 ## App Structure
@@ -79,10 +99,11 @@ Stores coach-submitted game reflections and analysis from the SkillSelectPage.
 ### HomePage
 - Displays Club Logo.
 - Login Button (prototype: up to 20 users).
-- Diaplays Welcome text, from Azure so that it can be easily changed
+- Diaplays Welcome text, an area of text that is created and maintained via the Senior Coach Web Site
 
 ### SkillSelectPage
 - Team picker at top (pre-populated to coach's team, changeable).
+- An area of text that is created and maintained via the Senior Coach Web Site
 - Skill picker (dropdown/list) loaded from Azure Table and cached in App.
 - Dynamically loaded text box from Azure Table.
 - **Past Lessons Section:**  
@@ -118,7 +139,7 @@ Stores coach-submitted game reflections and analysis from the SkillSelectPage.
 	- Only senior coaches have access to these web-based reporting and admin tools.
  	- These features are optimized for desktop use.
   - Site creates a Searchable list of all saved Lessons
-  - A Lesson Byuilder process, to enter new lessons
+  - A Lesson Builder process, to enter new lessons
   - A users administration function
   - A reporting function
 
