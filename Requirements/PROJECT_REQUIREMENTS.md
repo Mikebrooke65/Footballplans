@@ -50,6 +50,25 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - Queryable by coach, team, or senior coach with audit trail support
 
 
+- ## GameFeedback Table
+Stores coach-submitted game reflections and analysis from the SkillSelectPage.
+
+- Fields:
+  - FeedbackID (PartitionKey): Unique identifier for each feedback entry
+  - CoachID: Links to submitting coach
+  - CoachName: Snapshot at time of entry (not dynamically fetched later)
+  - TeamID: Links to relevant team
+  - TeamName: Snapshot at time of entry
+  - Date: Game date (coach-selected, defaults to today's date)
+  - Notes: Free-text game analysis, guided by prompts (“What went well? What needs work?”)
+  - createdBy: Identity of record creator
+  - createdAt: Timestamp of creation
+
+- Editable and deletable only by the coach who submitted it
+- Queryable by coach, team, or senior coach dashboard
+- Future version may use text analysis to suggest lessons or detect performance trends
+
+
  - **Media:** Media assets are stored in Azure Blob Storage under structured folders:
  	- Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
  	- Videos: `media/videos/{LessonID}/` or `media/videos/{SkillCategory}/`
@@ -62,6 +81,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 ### HomePage
 - Displays Club Logo.
 - Login Button (prototype: up to 20 users).
+- Diaplays Welcome text, from Azure so that it can be easily changed
 
 ### SkillSelectPage
 - Team picker at top (pre-populated to coach's team, changeable).
@@ -80,15 +100,21 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - Coaches select a lesson to view details.
 
 ### LessonPage
+
 - Displays selected lesson’s `.html` content, stored in Azure table and cached to App
 - References up to three images, which can be opened full-screen (not available off-line)
 - References up to three videos, which can be viewed (not available off-line)
-- **Header Feature:**  
+
+- **Header Feature:**
   - Displays: “Record this lesson being delivered?”
-  - Button to record today’s date or enter custom delivery date.
-  - On submission, saves delivery record to Azure Table Storage.
-- Coaches can view, edit, or delete their own lesson delivery records.
-- Delivery history is queryable by all or by team
+  - Button to record today’s date or enter custom delivery date
+  - On submission, saves delivery record to Azure Table Storage
+
+- **Delivery Notes Capture:**
+  - After submitting delivery record, a pop-up prompt allows the coach to optionally enter a note
+  - Notes can include reflections, feedback, or context about how the session went
+  - If entered, the note is stored in the `Notes` field of the `DeliveryRecords` table
+  - Coaches can later view or update their own notes via the Past Lessons section
 
 ## Senior Coach Site Structure
 	- Only senior coaches have access to these web-based reporting and admin tools.
@@ -130,13 +156,32 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - All app data stored in Azure Table Storage.
 
 ### Version 2 (To Be Added once version 1 fully operational)
+#### Game day feedback
+From the from the SkillSecelctPage, a Coach gan also select Game analysis, which will allow them to enter a date (highlighting todays date to make it easier if they are doing it on the day) and then enter som free text analysis of hpow the game went, prompted with what went well, what needs Work?. This will be saved and could be used by .ai to tailor som elesson plans.
 
-#### Messaging
-- In a future release, senior coaches can send messages to coaches via the app.
-- Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
-- Messages may include announcements, updates, or reminders.
-- Senior coaches can target all coaches, selected teams, or individual coaches.
-- Coaches receive notifications and have access to a message history in the app.
+### Version 2: Game Day Feedback (To Be Added once Version 1 fully operational)
+
+#### SkillSelectPage Extension
+- Adds new option under team selection: “Add Game Analysis”
+- Prompts coach to select a date (defaulting to today’s date)
+- Text prompt guides coach: “What went well? What needs work?”
+- Allows free-text entry for reflections and match context
+- Saves to `GameFeedback` table with fields:
+  - FeedbackID (PartitionKey), CoachID, TeamID, Date, Notes, createdBy, createdAt
+- Feedback is queryable by team, coach, and date range
+- Editable only by the submitting coach
+- Future versions may surface relevant feedback to:
+  - Auto-suggest relevant lessons
+  - Highlight common themes in team performance
+  - Display insights in Senior Coach dashboard
+
+#### AI-Tailored Planning (Future Scope)
+- Feedback text undergoes keyword extraction and sentiment tagging
+- AI maps key themes (e.g., “midfield spacing,” “low intensity,” “strong transitions”) to lesson tags
+- Tailored lesson suggestions appear on SkillSelectPage (e.g., “Recommended: Lesson on Pressing Triggers”)
+- Senior Coach view optionally highlights recurring challenges across teams
+
+
 
 #### Messaging Foundation (Preparation for Future Release)
 
