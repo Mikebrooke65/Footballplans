@@ -1,12 +1,12 @@
-# 🧩 STEP_2.md — Contributor Roles & Access Tiers
+# 🧩 STEP_2.md — Contributor Roles & Access Tiers (Azure Implementation)
 
-This step defines contributor roles and enforces role-aware access to backend logic. It protects data integrity and ensures contributors only interact with the content they’re authorized to view or modify.
+This step defines contributor roles and enforces secure, role-scoped access to Azure Tables through your backend API or Azure Functions.
 
 ---
 
 ## 1️⃣ Define Contributor Roles
 
-Create a shared reference for contributor types and their permissions.
+Create a reference for contributor roles and their permissions.
 
 ### 🔹 Roles & Capabilities
 
@@ -16,80 +16,44 @@ Create a shared reference for contributor types and their permissions.
 | `SeniorCoach` | Edit lessons, assign teams, view audit history                               |
 | `Admin`       | Full access to all records, schema, and audit logs                           |
 
-### 🔹 Implementation Steps
+### 🔹 Implementation Instructions
 
-1. **Create Role Definitions**
-   - Add a `roles.json` file in `/sample_data/`:
+1. **Store Role Definitions**
+   - Roles are embedded in the `Users` Azure Table.
+   - Each user row includes:
      ```json
      {
-       "Coach": ["ViewLessons", "DeliverSessions"],
-       "SeniorCoach": ["EditLessons", "AssignTeams", "ViewAudit"],
-       "Admin": ["FullAccess"]
-     }
-     ```
-
-2. **Assign Roles to Contributors**
-   - Extend contributor records with:
-     ```json
-     {
-       "ContributorID": "abc123",
+       "UserID": "abc123",
        "Role": "SeniorCoach",
-       "AccessibleTeamIDs": ["team01", "team02"]
+       "AccessibleTeamIDs": ["team01", "team02"],
+       "DefaultTeamID": "team01"
      }
      ```
 
-3. **Document Role Matrix**
-   - Update `CONTRIBUTOR_GUIDE.md` with:
-     - Role descriptions
-     - Editable vs. read-only actions
-     - Markdown formatting expectations per role
+2. **Document Role Matrix**
+   - In `CONTRIBUTOR_GUIDE.md`, clarify:
+     - Each role’s access permissions
+     - Editing vs read-only capabilities
+     - Markdown formatting expectations (for Senior Coach text blocks)
 
 ---
 
-## 2️⃣ Enforce Access Tiers
+## 2️⃣ Enforce Access Tiers (Backend Logic)
 
-Ensure backend logic respects contributor roles and team scope.
+Your API or Azure Function endpoints must enforce user-specific access controls.
 
-### 🔹 Implementation Steps
+### 🔹 Azure Setup
 
-1. **Validate Team Access**
-   - In Azure Function or API:
-     ```csharp
-     if (!user.AccessibleTeamIDs.Contains(request.TeamID))
-         return Unauthorized("Team access denied.");
-     ```
+| Azure Resource             | Purpose                                                                 |
+|----------------------------|--------------------------------------------------------------------------|
+| Azure Table Storage        | Hosts structured data (`Users`, `Teams`, `Lessons`, etc.)               |
+| Azure Function App or API  | Executes access checks and serves scoped data to the MAUI app           |
+| Azure AD App Registration* | Optional for production auth; use role strings in dev/prototype         |
 
-2. **Restrict Edit Permissions**
-   - Check role before allowing updates:
-     ```csharp
-     if (user.Role != "SeniorCoach" && user.Role != "Admin")
-         return Forbid("Edit not permitted for this role.");
-     ```
+> ℹ️ *For V1, use stored role strings from the `Users` table — no AD integration needed yet.*
 
-3. **Log Unauthorized Attempts**
-   - Add audit entry:
-     ```csharp
-     LogUnauthorizedAccess(user.ContributorID, request.TeamID, DateTime.UtcNow);
-     ```
+### 🔹 Backend Access Logic
 
-4. **Scope Queries by Team**
-   - Filter data fetches:
-     ```csharp
-     var lessons = tableClient.Query<LessonEntity>(e => user.AccessibleTeamIDs.Contains(e.TeamID));
-     ```
-
-5. **Test Role-Based Scenarios**
-   - Simulate:
-     - Coach viewing lessons
-     - SeniorCoach editing content
-     - Admin accessing audit logs
-
----
-
-## ✅ Completion Criteria
-
-- Contributor roles defined in `/sample_data/roles.json`
-- Role-aware logic implemented in backend endpoints
-- Unauthorized actions logged with timestamps
-- Contributor documentation updated with role matrix
-
+1. **Fetch User Record**
+   ```csharp
+   var user = await tableClient.GetEntityAsync<UserEntity>(userID, userID);
