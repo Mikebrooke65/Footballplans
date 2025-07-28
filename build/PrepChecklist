@@ -1,0 +1,82 @@
+# PREP_CHECKLIST.md
+
+Checklist of preparation steps prior to UI and app development for the West Coast Rangers Junior Coaching Platform.
+
+---
+
+## ✅ 1. Repo Structure & Scaffolding
+
+- [ ] Folder layout matches build phases:
+  - `/vs22/Pages/`, `/vs22/Admin/`, `/build/`, `/sample_data/`
+- [ ] `BUILD_PLAN.md` and `DesignPrinciples.md` located under `/build/`
+- [ ] Stub components created for key UI targets:
+  - `LessonBuilder`
+  - `TextBlockEditor`
+  - `SkillSelectPage`
+  - `SessionStart`
+  - `AuditTrailViewer`
+- [ ] Solution/project file created in VS2022 with named folders
+
+---
+
+## ✅ 2. Sample Records
+
+- [ ] Add sample `CoachTextBlocks` using Markdown:
+  - Bold text
+  - Bullet lists
+  - Line breaks
+- [ ] Add sample `Lessons` with structured content
+- [ ] Store all records in `/sample_data/`
+
+---
+
+## ✅ 3. Permissions & Auth Framework
+
+- [ ] Choose identity strategy (e.g. Azure AD, role flags)
+- [ ] Create mock users:
+  - Senior Coach
+  - Standard Coach
+- [ ] Define access rights per page:
+  - Editable vs. read-only
+  - Markdown input vs. display-only
+
+---
+
+## ✅ 4. Test Harness Setup
+
+- [ ] Build input validators for:
+  - Markdown text blocks
+  - Lesson content fields
+- [ ] Set up backend mocks for Azure Table reads
+- [ ] Markdown rendering tests (string input → UI preview output)
+
+---
+
+## ✅ 5. Contributor Experience Map
+
+- [ ] Document full flow for a contributor:
+  - Logging in
+  - Editing a block
+  - Previewing Markdown
+  - Starting a session
+  - Auditing a delivery
+- [ ] Use this to refine contributor docs and interface hints
+
+---
+
+## ✅ 6. Project Documentation
+
+- [ ] Update `README.md` to include:
+  - Phase summary
+  - Links to `BUILD_PLAN.md`, `DesignPrinciples.md`, `CONTRIBUTOR_GUIDE.md`
+- [ ] Create checklist in `CONTRIBUTOR_GUIDE.md` for Markdown formatting do’s/don’ts
+- [ ] Add visual formatting examples or screenshots (optional)
+
+---
+
+## 📌 Optional Enhancements (Prep Stage)
+
+- [ ] Research/choose Markdown renderer with sanitization
+- [ ] Plan fallback or validator logic for unsupported tags
+- [ ] Decide on Markdown toggle option in editor UI
+
