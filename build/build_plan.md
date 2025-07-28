@@ -1,139 +1,152 @@
 # BUILD_PLAN.md
 
-A phase-based implementation guide for the West Coast Rangers Junior Coaching App. Reflects finalized requirements and updated design principles, with contributor-first architecture and Markdown support.
+Phase-based implementation guide for the West Coast Rangers Junior Coaching App using .NET MAUI. Reflects finalized requirements, contributor-first principles, and Markdown-enabled content architecture.
 
 ---
 
 ## 1️⃣ Foundation Setup – Schema & Tables
 
 **Objectives**
-- Deploy all Azure Tables (`CoachTextBlocks`, `Lessons`, `LessonDeliveries`, etc.)
-- Validate optional vs. required fields
-- Pre-fill critical metadata and team filters
-- Uniform audit fields (`createdBy`, `createdAt`)
+- Deploy Azure Tables: `CoachTextBlocks`, `Lessons`, `LessonDeliveries`, `Teams`, etc.
+- Validate field types, optional/required rules, audit metadata
+- Confirm naming conventions across all schema files
+- Tag content for filtering and session prep
 
 **Tooling**
 - Azure Table Storage
-- Bicep / Azure Portal config
+- Bicep, Azure CLI, or Portal config
+- Sample records in `/sample_data/`
 
 **Contributor Impact**
-- Improves onboarding clarity
-- Future-proof field structure
+- Predictable table layout supports easy onboarding and future content extension
 
 ---
 
 ## 2️⃣ Backend Logic & Permissions
 
 **Objectives**
-- Implement team assignment via `AccessibleTeamIDs`
-- Enforce coach vs. senior coach permission tiers
-- Build Markdown rendering engine for `CoachTextBlocks`
+- Enforce access tiers via `AccessibleTeamIDs`, role flags
+- Build Markdown rendering with sanitization
+- Connect MAUI app to Azure Tables with permission logic
+- Support coach vs. senior coach operations
 
 **Tooling**
-- Azure Functions / Logic Apps
-- Sanitized Markdown preview pipeline
+- Azure Functions / .NET API layer
+- Markdown library (e.g. Markdig + MAUI wrapper)
+- Role assignment logic for contributors
 
 **Contributor Impact**
-- Role-based access aligned to coaching workflows
+- Clear boundaries per contributor type prevent accidental edits
 
 ---
 
 ## 3️⃣ Contributor-Facing Features
 
 **Objectives**
-- Build Lesson Builder with versioning & changelogs
-- Create Text Block Editor with Markdown preview
-- Introduce formatting hints in editor UI
+- Build `LessonBuilder` and `TextBlockEditor` views
+- Support versioning, changelog notes, live Markdown preview
+- Add formatting hints and tooltips for Markdown syntax
 
-**VS2022 Pages**
-- `LessonBuilder.razor` / `.cshtml`
-- `TextBlockEditor.razor` / `.cshtml`
+**MAUI Files**
+- `LessonBuilder.xaml`
+- `LessonBuilder.xaml.cs`
+- `TextBlockEditor.xaml`
+- `TextBlockEditor.xaml.cs`
 
 **Contributor Impact**
-- Real-time feedback and formatting flexibility
+- Real-time content preview and styling with zero HTML required
 
 ---
 
 ## 4️⃣ UI Integration & Dynamic Content
 
 **Objectives**
-- Inject `CoachTextBlocks` into `SkillSelectPage`, `HomePage`, etc.
-- Render Markdown cleanly in display components
-- Handle fallback text and multiline render logic
+- Dynamically inject `CoachTextBlocks` into key screens
+- Handle missing text blocks with fallback logic
+- Add support for line breaks, bullets, bold via Markdown renderer
 
-**VS2022 Pages**
-- `SkillSelectPage.razor`
-- `HomePage.razor`
+**MAUI Files**
+- `SkillSelectPage.xaml`
+- `HomePage.xaml`
+- Custom `MarkdownView.xaml.cs` control (if needed)
 
 **Contributor Impact**
-- Personalized coaching prompts directly in-app
+- Personalized, readable text displayed to coaches and players
 
 ---
 
 ## 5️⃣ Session & Delivery Flow
 
 **Objectives**
-- Enable dynamic session flow per team
-- Record lesson version, coach snapshot, and team
-- Allow flexible coaching across squads
+- Build session kickoff flow: team select, coach metadata, lesson snapshot
+- Record lesson version number and team association
+- Enable flexible team switching with full audit trail
 
-**VS2022 Pages**
-- `SessionStart.razor`
-- `DeliveryFlow.razor`
+**MAUI Files**
+- `SessionStart.xaml`
+- `SessionStart.xaml.cs`
+- `DeliveryFlow.xaml`
+- `DeliveryFlow.xaml.cs`
 
 **Contributor Impact**
-- Preserves historical context without rigid bindings
+- Coaches can deliver lessons across teams without losing historical fidelity
 
 ---
 
 ## 6️⃣ Reporting & Audit Trail
 
 **Objectives**
-- View delivery records by date, user, action type
-- Surface lesson changelogs for senior coaches
+- Senior Coaches view delivery history, changelog timeline
+- Filter records by coach, date, lesson ID
+- Align views with field structure from schema
 
-**VS2022 Pages**
-- `AuditTrailViewer.razor`
+**MAUI Files**
+- `AuditTrailViewer.xaml`
+- `AuditTrailViewer.xaml.cs`
+- Optional: `LessonVersionHistory.xaml`
 
 **Contributor Impact**
-- Full transparency and governance fidelity
+- Coaches and admins stay accountable and well-informed
 
 ---
 
 ## 7️⃣ Contributor Onboarding & Docs
 
 **Objectives**
-- Update all contributor-facing docs to reflect Markdown usage
-- Provide example text blocks and formatting tips
-- Add “preview before publish” reminders
+- Update contributor-facing documentation:
+  - Markdown formatting guide
+  - Editable vs. read-only page matrix
+  - UX screenshots (optional)
+- Add checklist for Markdown do’s/don’ts
+- Create stub text blocks and lessons in `/sample_data/`
 
 **Tooling**
 - `CONTRIBUTOR_GUIDE.md`
-- Sample records in `/sample_data/`
+- `README.md` with phase summary + links
 
 **Contributor Impact**
-- Minimizes formatting surprises and empowers clear contributions
+- Minimizes confusion and formatting surprises
 
 ---
 
 ## 🔄 Optional Enhancements
 
-- Markdown toggle (on/off)
-- Markdown-safe validator tooltips
-- Preview block search/tagging
+- Markdown toggle (allow user to switch between Markdown/plain input)
+- Tooltip-style validator for invalid Markdown strings
+- Searchable preview block by tag or use case
 
 ---
 
-## 📦 Pages Bin Build Summary (VS2022)
+## 📦 MAUI App Build Summary
 
-| Phase | Key VS2022 Pages | Output Folder |
-|-------|------------------|----------------|
-| 3     | `LessonBuilder`, `TextBlockEditor` | `vs22/Pages/` or `vs22/src/components/` |
-| 4     | `SkillSelectPage`, `HomePage` | `vs22/Pages/` |
-| 5     | `SessionStart`, `DeliveryFlow` | `vs22/Pages/` |
-| 6     | `AuditTrailViewer` | `vs22/Admin/` |
+| Phase | Views Developed | Files in VS2022 |
+|-------|-----------------|-----------------|
+| 3     | `LessonBuilder`, `TextBlockEditor` | `/Views/` folder |
+| 4     | `SkillSelectPage`, `HomePage` | `/Views/`, custom controls in `/Controls/` |
+| 5     | `SessionStart`, `DeliveryFlow` | `/Views/` |
+| 6     | `AuditTrailViewer`, `LessonVersionHistory` | `/Views/Admin/` |
 
 ---
 
-_Endorsed by DesignPrinciples.md — Markdown support now a core formatting principle._
+_This build plan aligns with `DesignPrinciples.md`, emphasizing contributor empowerment, Markdown clarity, and audit-ready flows throughout the platform._
 
