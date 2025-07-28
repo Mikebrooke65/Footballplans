@@ -23,7 +23,8 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - **Cloud Database:** Azure Table Storage for all app data.
 - **Authentication:** For prototype, login for up to 20 users.
 
-## Data Storage (Azure Table Storage)
+## Azure Data Storage
+- Azure Table Storage for structured data and Azure Blob Storage for media
 - **Coaches Table:** Stores coach details, login info, associated team.
 - **Teams Table:** Stores team info, age group, etc.
 - **Lessons Table:** Stores lesson details, skill category, HTML URL, image URLs.
@@ -99,7 +100,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 ## Versions
 
 ### Version 1- Prototyope
-- Core Features
+- Log in for 200 users
 - Coaches/managers browse/select lesson plans after logging in.
 - Senior coaches create plans via the lesson builder web interface.
 - Skills/lessons dynamically loaded from tables.
@@ -108,14 +109,14 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 - Lesson delivery records: create, edit, delete; history by coach/team.
 - All app data stored in Azure Table Storage.
 
-## Version 2 (To Be Added once version 1 fully operational)
+### Version 2 (To Be Added once version 1 fully operational)
 
 ## Messaging
--	In a future release, senior coaches can send messages to coaches via the app.
--	Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
--	Messages may include announcements, updates, or reminders.
--	Senior coaches can target all coaches, selected teams, or individual coaches.
--	Coaches receive notifications and have access to a message history in the app.
+- In a future release, senior coaches can send messages to coaches via the app.
+- Messaging is initiated from the senior coach web app and delivered to coaches’ mobile app (via push notifications or in-app inbox).
+- Messages may include announcements, updates, or reminders.
+- Senior coaches can target all coaches, selected teams, or individual coaches.
+- Coaches receive notifications and have access to a message history in the app.
 
 ### Messaging Foundation (Preparation for Future Release)
 
@@ -159,22 +160,21 @@ CREATE TABLE Messages (
     FOREIGN KEY (RecipientID) REFERENCES Users(UserID),
     FOREIGN KEY (TeamID) REFERENCES Teams(TeamID)
 			)
-
+```
 
 ## Privacy & Audit
--	Coach Privacy:
 -	Coaches can only see:
--	Lessons they personally delivered
--	Lessons delivered to their selected team (not revealing which coach delivered unless it was them)
+	-	Lessons they personally delivered, or
+	-	Lessons delivered to their selected team (not revealing which coach delivered unless it was them)
 -	Coaches cannot access or view other coaches’ delivery details.
 -	Senior Coach Audit Trail:
 -	Senior coaches, via the static web app, can view:
-  -	All lesson delivery records, across all coaches and teams
-  -	An audit log showing when records were added, edited, or deleted, and by which user
--	Audit data includes:
-  -	Record ID, action type (add/edit/delete), user, timestamp, before/after values
--	Data Model:
-  -	DeliveryRecords table contains: createdBy, createdAt,
+  	-	All lesson delivery records, across all coaches and teams
+  	-	An audit log showing when records were added, edited, or deleted, and by which user
+	-	Audit data includes:
+	 	 -	Record ID, action type (add/edit/delete), user, timestamp, before/after values
+		-	Data Model:
+  			-	DeliveryRecords table contains: createdBy, createdAt,
 
 ## Offline Access
 -	Lesson content (HTML/text) is cached locally and accessible offline in the mobile app.
@@ -186,21 +186,20 @@ CREATE TABLE Messages (
 
 ## Authentication & User Management
 -	Account Provisioning:
--	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Azure Static Web App.
+	-	All accounts (coach, manager, senior coach) are created and managed by senior coaches via the Senior Coach Site (Azure Static Web App).
 -	Required fields: first name, last name, cellphone, email address, password.
--	Only senior coaches have access to the user management interface.
 -	Login Flow:
--	Users log in with email and password.
--	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
--	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
--	Roles:
+	-	Users log in with email and password.
+	-	After first successful login, password is securely cached on the device; repeated entry is not required unless the user logs out or resets their device.
+	-	Secure storage is used for credentials (e.g., Keychain/iOS, Keystore/Android).
+	-	Roles:
 -	Each user is assigned a role (coach, manager, senior coach) at account creation.
 -	Roles control access to features and data.
 -	Password Reset:
--	Senior coaches can reset user passwords via the admin site.
--	(Optional) Self-service password reset may be added later.
+	-	Senior coaches can reset user passwords via the admin site.
+	-	(Optional) Self-service password reset may be added later.
 -	Two-Factor Authentication (2FA):
--	Two-factor authentication is not required for this application.
+	-	Two-factor authentication is not required for this application.
 
 ## Coach-Team Association
 -	Coaches are not limited to a single team within the app.
