@@ -48,9 +48,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - `Notes` are optional reflections from the coach, timestamped with delivery
   - Editable and deletable by the coach who recorded it
   - Queryable by coach, team, or senior coach with audit trail support
-
-
-- ## GameFeedback Table
+- **GameFeedback Table
 Stores coach-submitted game reflections and analysis from the SkillSelectPage.
 
 - Fields:
