@@ -41,8 +41,8 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 
 ### SkillSelectPage
 - Team picker at top (pre-populated to coach's team, changeable).
-- Skill picker (dropdown/list) loaded from tables.
-- Dynamically loaded text box from table.
+- Skill picker (dropdown/list) loaded from Azure Table and cached in App.
+- Dynamically loaded text box from Azure Table.
 - **Past Lessons Section:**  
   - Coach can select to view either:
     - Past lessons they have delivered
@@ -52,11 +52,11 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - From detail view, user can navigate back to SkillSelectPage.
 
 ### LessonSelectPage
-- Dynamically loads lessons under selected skill from table.
+- Dynamically loads lessons under selected skill from Azure Table and cachjed in App
 - Coaches select a lesson to view details.
 
 ### LessonPage
-- Displays selected lesson’s `.html` content.
+- Displays selected lesson’s `.html` content, stored in Azure table and cached to App
 - References up to three images, which can be opened full-screen (not available off-line)
 - References up to three videos, which can be viewed (not available off-line)
 - **Header Feature:**  
