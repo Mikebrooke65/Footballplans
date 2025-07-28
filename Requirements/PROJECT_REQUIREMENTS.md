@@ -26,7 +26,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
 ## Azure Data Storage
 - Azure Table Storage for structured data and Azure Blob Storage for media
 - **Users Table:** Stores user details, roles, and optional team associations.
-  - Fields: UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), DefaultTeamID (optional), AccessibleTeamIDs (array or comma-separated list)
+  - Fields: UserID (PartitionKey), Role (Coach/Manager/SeniorCoach), FirstName, LastName, Email, PasswordHash, Cellphone (optional), DefaultTeamID (optional, for UI pre-poulation only, not a hard assoignment), AccessibleTeamIDs (array or comma-separated list)
   - `DefaultTeamID` reflects a coach’s main assignment (may be null)
   - `AccessibleTeamIDs` lists other teams the user is allowed to support or view
   - Enables dynamic team selection in the app (e.g. assisting another squad)
@@ -39,10 +39,16 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - LessonID (PartitionKey), SkillCategory (e.g. Passing), LessonName (e.g. 1 – Passing with Intent), LessonHTML (blob path to .html lesson plan), MediaURLs (references to images or videos used in lesson)
   - Used to dynamically populate lesson selection and display in the app
   - Supports versioning and media-rich lesson delivery across teams
-- **DeliveryRecords Table:** Stores lesson delivery records:
-  - CoachID, TeamID, LessonID, LessonName, DateDelivered, Notes
-  - Editable and deletable by coaches
-  - Queryable by coach or team for history
+- **DeliveryRecords Table:** Stores lesson delivery records with snapshot fidelity and relational integrity.
+  - Fields: DeliveryID (PartitionKey), CoachID, CoachName, TeamID, TeamName, LessonID, LessonVersionNumber, DateDelivered, Notes (optional), createdBy, createdAt
+  - `CoachName` and `TeamName` are captured as text snapshots at the time of delivery (not dynamically fetched later)
+  - Ensures historical accuracy even if names or team assignments are updated in other tables
+  - `CoachID`, `TeamID`, and `LessonID` allow joins for filtering and permissions
+  - `LessonVersionNumber` preserves the exact version delivered, even if content changes
+  - `Notes` are optional reflections from the coach, timestamped with delivery
+  - Editable and deletable by the coach who recorded it
+  - Queryable by coach, team, or senior coach with audit trail support
+
 
  - **Media:** Media assets are stored in Azure Blob Storage under structured folders:
  	- Images: `media/images/{LessonID}/` or `media/images/{SkillCategory}/`
@@ -175,20 +181,23 @@ CREATE TABLE Messages (
     FOREIGN KEY (TeamID) REFERENCES Teams(TeamID)
 			)
 ```
-
 ## Privacy & Audit
--	Coaches can only see:
-	-	Lessons they personally delivered, or
-	-	Lessons delivered to their selected team (not revealing which coach delivered unless it was them)
--	Coaches cannot access or view other coaches’ delivery details.
--	Senior Coach Audit Trail:
--	Senior coaches, via the static web app, can view:
-  	-	All lesson delivery records, across all coaches and teams
-  	-	An audit log showing when records were added, edited, or deleted, and by which user
-	-	Audit data includes:
-	 	 -	Record ID, action type (add/edit/delete), user, timestamp, before/after values
-		-	Data Model:
-  			-	DeliveryRecords table contains: createdBy, createdAt,
+
+- Coaches can only view:
+  - Lessons they personally delivered
+  - Lessons delivered to their selected team (only their own name appears unless they were the one who delivered it)
+- Coaches cannot access or view other coaches’ delivery records or feedback
+- Senior Coaches can view:
+  - Which team a coach delivered to for any recorded lesson
+  - All lesson delivery records across coaches and teams
+  - Audit logs showing when delivery records were added, edited, or deleted, and by which user
+- Audit fields:
+  - Each record includes `createdBy` and `createdAt` fields from the DeliveryRecords table
+  - Records include action type (add/edit/delete), user ID, timestamp, and before/after values
+- Snapshot fidelity:
+  - Coach and Team names are captured at the moment of delivery and not updated afterward
+  - Preserves historical accuracy even if names or assignments change later
+
 
 ## Offline Access
 -	Lesson content (HTML/text) is cached locally and accessible offline in the mobile app.
