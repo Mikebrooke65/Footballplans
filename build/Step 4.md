@@ -1,6 +1,6 @@
 # 🧱 Step 4 – Define and Parse Input Payload for `IndexLessonContent` Function
 
-This step prepares your Azure Function to ingest structured lesson metadata and media references. It aligns strictly with the **Lessons** table specification from the `PROJECT_REQUIREMENTS.md`.
+This step prepares your Azure Function to ingest **exact lesson fields** matching the `Lessons` table. It supports lesson indexing, blob path linking, and structured markdown content delivery.
 
 ---
 
@@ -9,12 +9,13 @@ This step prepares your Azure Function to ingest structured lesson metadata and 
 ```csharp
 public class LessonIndexRequest
 {
-    public string LessonId { get; set; }               // Unique lesson reference (PartitionKey)
-    public string CreatedBy { get; set; }              // Contributor identity (email or ID)
-    public string LessonName { get; set; }             // Human-readable title
-    public string SkillCategory { get; set; }          // e.g. Passing, Dribbling
-    public string LessonHTML { get; set; }             // Blob path to .html lesson content
-    public List<string> MediaURLs { get; set; }        // Optional: paths to related media (images/videos)
+    public string LessonID { get; set; }              // PartitionKey
+    public string Name { get; set; }                  // Display name of the lesson
+    public string Skill { get; set; }                 // e.g. Passing, Dribbling
+    public List<string> Tags { get; set; }            // Optional keywords for discovery
+    public string MarkdownContent { get; set; }       // Raw markdown (.md format)
+    public string MediaFolderPath { get; set; }       // Path to related media assets in Blob Storage
+    public string CreatedBy { get; set; }             // Identity of contributing Senior Coach
 }
 ```
 
@@ -24,19 +25,15 @@ public class LessonIndexRequest
 
 ```json
 {
-  "LessonId": "L001",
-  "CreatedBy": "seniorcoach@example.com",
-  "LessonName": "1 – Passing with Intent",
-  "SkillCategory": "Passing",
-  "LessonHTML": "https://blobstorage.wcrfc.net/lessonplans/L001.html",
-  "MediaURLs": [
-    "https://blobstorage.wcrfc.net/media/images/L001/image1.jpg",
-    "https://blobstorage.wcrfc.net/media/videos/L001/video1.mp4"
-  ]
+  "LessonID": "L001",
+  "Name": "1 – Passing with Intent",
+  "Skill": "Passing",
+  "Tags": ["short pass", "decision making"],
+  "MarkdownContent": "## Warm-up\n- 3v3 rondo\n\n## Main Activity\n- Pressure passing lanes",
+  "MediaFolderPath": "https://blobstorage.wcrfc.net/media/L001/",
+  "CreatedBy": "seniorcoach@example.com"
 }
 ```
-
-This sample matches the mobile app structure and ensures all media paths follow blob conventions.
 
 ---
 
@@ -44,15 +41,13 @@ This sample matches the mobile app structure and ensures all media paths follow 
 
 ```powershell
 $payload = @{
-    LessonId = "L001"
+    LessonID = "L001"
+    Name = "1 – Passing with Intent"
+    Skill = "Passing"
+    Tags = @("short pass", "decision making")
+    MarkdownContent = "## Warm-up`n- 3v3 rondo`n`n## Main Activity`n- Pressure passing lanes"
+    MediaFolderPath = "https://blobstorage.wcrfc.net/media/L001/"
     CreatedBy = "seniorcoach@example.com"
-    LessonName = "1 – Passing with Intent"
-    SkillCategory = "Passing"
-    LessonHTML = "https://blobstorage.wcrfc.net/lessonplans/L001.html"
-    MediaURLs = @(
-        "https://blobstorage.wcrfc.net/media/images/L001/image1.jpg",
-        "https://blobstorage.wcrfc.net/media/videos/L001/video1.mp4"
-    )
 } | ConvertTo-Json -Depth 3
 
 Invoke-RestMethod -Method Post `
@@ -61,41 +56,40 @@ Invoke-RestMethod -Method Post `
   -ContentType "application/json"
 ```
 
-📌 **Note:** Replace `your_function_key` with the actual Azure Function key from the portal.
+---
+
+## 📚 Table Alignment
+
+| Azure Table       | Field Name         | Purpose                                |
+|-------------------|--------------------|----------------------------------------|
+| `Lessons`         | LessonID (PK)      | Uniquely identifies the lesson         |
+|                   | Name               | Human-readable title                   |
+|                   | Skill              | Coaching skill area                    |
+|                   | Tags               | Discoverability & filtering            |
+|                   | MarkdownContent    | Lesson body in markdown format         |
+|                   | MediaFolderPath    | Location of lesson assets              |
+|                   | CreatedBy          | Contributor identity for audit trail   |
 
 ---
 
-## 📚 Related Tables Impacted
+## ✅ Project Requirements Compliance
 
-| Table Name       | Impact                                |
-|------------------|----------------------------------------|
-| `Lessons`        | Adds new indexed lessons with content  |
-| `DeliveryRecords`| May later link `LessonId` + versioning |
-| `CoachTextBlocks`| Not directly impacted in this step     |
-
----
-
-## ✅ Requirements Compliance Snapshot
-
-| Requirement Area                   | Status  | Notes |
-|-----------------------------------|---------|-------|
-| Mobile App Ingestion              | ✅      | HTML + media links renderable via .NET MAUI. |
-| Senior Coach Site Delivery        | ✅      | Content structured for lesson builder. |
-| Azure Table Storage Compliance    | ✅      | Matches `Lessons` schema exactly. |
-| Versioning Fidelity               | ✅      | `LessonHTML` path can encode versioning. |
-| Contributor Identity              | ✅      | `CreatedBy` supports traceability. |
-| Media Support                     | ✅      | `MediaURLs` allows flexible blob linking. |
-| Cross-Table Linkage Ready         | ✅      | `LessonId` enables joins with delivery history. |
-| Offline Capability Preparation    | ✅      | HTML field cached in app, media fallback supported. |
+| Area                                | Status | Notes |
+|-------------------------------------|--------|-------|
+| Mobile App Markdown Rendering       | ✅     | Markdown stored in `MarkdownContent` |
+| Image & Video Support               | ✅     | Assets stored in structured blob folders |
+| Table Compliance                    | ✅     | Every field matches actual schema |
+| Contributor Auditability            | ✅     | `CreatedBy` tracked as metadata |
+| Versioning Support                  | ⚠️     | Versioning managed in delivery records — not here |
+| Offline Compatibility               | ✅     | Markdown cached by mobile app |
 
 ---
 
 ## 🧠 Contributor Notes
 
-- This model defines **lesson metadata only** — actual lesson content lives in HTML blobs.  
-- No instructional steps or markdown instructions are stored here.  
-- MediaURLs are flexible and can reference structured folders (`LessonID` or `SkillCategory`).  
-- Fully testable via CLI or Postman — and safe for contributor uploads via Senior Coach site.  
-- This step respects all separation-of-concerns and indexing logic laid out in your schema.  
+- **MarkdownContent** supports formatted text, lists, headers — no need to embed HTML.
+- **MediaFolderPath** must match the folder used in Blob Storage (e.g. `media/L001/`)
+- `CreatedBy` ensures lessons are traceable back to their contributor.
+- This payload should be treated as an ingestion artifact — delivery tracking happens later in `DeliveryRecords`.
 
 ---
