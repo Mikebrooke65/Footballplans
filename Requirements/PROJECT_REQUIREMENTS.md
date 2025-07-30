@@ -40,7 +40,7 @@ This app is for the football club **West Coast Rangers**, designed to assist our
   - Enables filtering and scheduling logic for personalized app experiences
 
 - **Lessons Table:** Stores structured lesson details and media references.
-  - Fields: LessonID (PartitionKey), SkillCategory (e.g. Passing), LessonName (e.g. 1 – Passing with Intent), LessonHTML (blob path to .html lesson plan), MediaURLs (references to images or videos used in lesson)
+  - Fields: Partitionkey (LESSONID), Rowkey, Timestamp, Markdowncontent (the lesson in .md), Mediafolderpath (the afolder where media files are located), Name (name of the Lesson), Skill (the Skill the lesson is written about), Tags
   - Used to dynamically populate lesson selection and display in the app
   - Supports versioning and media-rich lesson delivery across teams
 
