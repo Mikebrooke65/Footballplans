@@ -1,5 +1,25 @@
 # 🧠 Deploy Step 2 – FootballCoachFunctions Function App
 
+## 🌐 Azure Deployment Target
+
+- 🧭 Resource Group: `FootballCoachFunctions_group`
+- 🚀 Function App Name: `FootballCoachFunctions`
+- 📍 Location: Confirmed via `az functionapp list`
+- 📦 Deployment Method: `az functionapp deployment source config-zip`
+
+> These values must be used for all CLI-based deployments unless explicitly changed. Errors will occur if app name or group mismatch.
+
+### 🔧 Validation Commands
+
+```powershell
+# Check Function Apps and their groups
+az functionapp list --query "[].{Name:name, ResourceGroup:resourceGroup}" --output table
+
+# Confirm resource groups
+az group list --query "[].name" --output table
+
+
+
 ## 📁 Local Build & Publish
 - **Project Folder**: `C:\Projects\FootballCoachApp\FootballCoachFunctions\`
 - **Publish Method**: VS2022 → FolderProfile1 → output to `publish_output`
