@@ -1,0 +1,16 @@
+# Step 5 – Index a Lesson into Azure Table
+
+This step wires up the `IndexLessonContent` Azure Function to accept a lesson payload, validate it, and persist it to Azure Table Storage. All fields are explicitly required, with null-safety guards in place.
+
+## 🧩 Lesson Input Model (`LessonIndexRequest.cs`)
+```csharp
+public class LessonIndexRequest
+{
+    public required string LessonID { get; set; }
+    public required string Name { get; set; }
+    public required string Skill { get; set; }
+    public required List<string> Tags { get; set; }
+    public required string MarkdownContent { get; set; }
+    public required string MediaFolderPath { get; set; }
+    public required string CreatedBy { get; set; }
+}
